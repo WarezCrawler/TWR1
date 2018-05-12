@@ -6,18 +6,12 @@ using System.Linq;
 using System.Timers;
 using KSP.UI.Screens;
 
-
-
-
 namespace VerticalVelocity
 {
-
-
-
-
     //Begin Vertical Velocity Control Mod by Diazo. (Originally Thrust to Weight Ratio 1 mod, hence the TWR1 references everywhere.)
     //Released under the GPL 3 license (http://www.gnu.org/licenses/gpl-3.0.html)
     //This means you may modify and distribute this code as long as you include the source code showing the changes you made and also release your changes under the GPL 3 license.
+    //https://forum.kerbalspaceprogram.com/index.php?/topic/46647-13jun0417-automate-vertical-velocity-and-altitude-control/
 
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class TWR1 : MonoBehaviour
@@ -74,7 +68,8 @@ namespace VerticalVelocity
         //private string TWR1HCTargetString; //Height Control target height in string format for GUI text entry
         //private bool TWR1HCOrbitDrop = false; //Are we orbit dropping?
         private IButton TWR1Btn; //blizzy's toolbar button
-        private bool TWR1Show = false; //show GUI?
+        //WarezCrawler - Make static and available publicly for the module to use
+        public static bool TWR1Show { get; private set; } = false; //show GUI?
         //private double TWR1HCThrustWarningTime = 0; //gametime saved for thrust warning check
         //private bool TWR1OrbitDropAllow = false; //are we high enough to offer Orbit Drop as an option?
         //private double TWR1OrbitDropHeightNeeded = 0f; //how much height needed for Orbit Drop
@@ -152,7 +147,7 @@ namespace VerticalVelocity
             try
             {
 
-                Debug.Log("Vertical Veloctiy 1.32 Loaded");
+                Debug.Log("Vertical Veloctiy 1.33 Loaded");
                 thisModule = this;
                 TWR1SettingsIcon = GameDatabase.Instance.GetTexture("Diazo/TWR1/TWR1Settings", false); //load toolbar icon
                                                                                                        //GameEvents.onVesselChange.Add(TWR1VesselChange);
@@ -1130,10 +1125,5 @@ namespace VerticalVelocity
                 Debug.Log("TWR1 Update Fail! " + errLine + " " + e);
             }
         }
-
-        
-
-
-
     }
 }

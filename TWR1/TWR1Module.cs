@@ -42,10 +42,10 @@ namespace VerticalVelocity
         public double TWR1OffsetVert = 0f; //vessel's offset from vertical in degrees
         public double TWR1OffsetVertRadian = 0f; //vessel's offset from vertical in radians
         public double TWR1OffsetVertRatio = 0f; //cosine of vessel's offset from vertical (return as unitless nubmer, so not degress or radians)
-       // public ConfigNode TWR1Node; //config node used to load keybind
-        //public string TWR1KeyCodeString = "Z"; //set the TWR1, default to Z if it can't load from TWR1.cfg
-        //public KeyCode TWR1KeyCode;
-        //public double TWR1VelocitySetpoint = 0f; //vessel vertical velocity setpoint
+                                                // public ConfigNode TWR1Node; //config node used to load keybind
+                                                //public string TWR1KeyCodeString = "Z"; //set the TWR1, default to Z if it can't load from TWR1.cfg
+                                                //public KeyCode TWR1KeyCode;
+                                                //public double TWR1VelocitySetpoint = 0f; //vessel vertical velocity setpoint
         public float TWR1VelocityCurrent = 0f; //vessel's current vertical velocity
         public float TWR1VelocityDiff = 0f; //velocity difference between setpoint and current
         public bool TWR1HeightCtrl = false; //control to height engaged?
@@ -59,24 +59,24 @@ namespace VerticalVelocity
         //public Color TWR1ContentColor; //Default content color
         public string TWR1HCTargetString; //Height Control target height in string format for GUI text entry
         public bool TWR1HCOrbitDrop = false; //Are we orbit dropping?
-       // public IButton TWR1Btn; //blizzy's toolbar button
-        //public bool TWR1Show = false; //show GUI?
+                                             // public IButton TWR1Btn; //blizzy's toolbar button
+                                             //public bool TWR1Show = false; //show GUI?
         public double TWR1HCThrustWarningTime = 0; //gametime saved for thrust warning check
         public bool TWR1OrbitDropAllow = false; //are we high enough to offer Orbit Drop as an option?
         public double TWR1OrbitDropHeightNeeded = 0f; //how much height needed for Orbit Drop
         public double TWR1OrbitDropTimeNeeded = 0f; //how much time needed to orbit drop
-       // public TextAnchor TWR1DefautTextAlign; //store default text alignment to reset it after GUI frame draws
-       // public TextAnchor TWR1DefaultTextFieldAlign; //same^
-       // public double TWR1SpeedStep = 1f; //Size of speed change per tap, default to 1m/s
-       // public string TWR1SpeedStepString; //speed step as string for GUI text entry
-       // public Texture2D TWR1SettingsIcon = new Texture2D(20, 22, TextureFormat.ARGB32, false); //toolbar icon texture
-       // public bool TWR1KASDetect = false; //is KAS installed?
-       // public double TWR1SpeedStep = 1f; //Size of speed change per tap, default to 1m/s
-        //public string TWR1SpeedStepString; //speed step as string for GUI text entry
-        //public Texture2D TWR1SettingsIcon = new Texture2D(20, 22, TextureFormat.ARGB32, false); //toolbar icon texture
-       // public Rect TWR1SettingsWin = new Rect(500, 500, 200, 145);  //settings window position
-        //public bool TWR1SettingsShow = false; //show settings window?
-        //public bool TWR1SelectingKey = false; //are we selecting a new key?
+                                                    // public TextAnchor TWR1DefautTextAlign; //store default text alignment to reset it after GUI frame draws
+                                                    // public TextAnchor TWR1DefaultTextFieldAlign; //same^
+                                                    // public double TWR1SpeedStep = 1f; //Size of speed change per tap, default to 1m/s
+                                                    // public string TWR1SpeedStepString; //speed step as string for GUI text entry
+                                                    // public Texture2D TWR1SettingsIcon = new Texture2D(20, 22, TextureFormat.ARGB32, false); //toolbar icon texture
+                                                    // public bool TWR1KASDetect = false; //is KAS installed?
+                                                    // public double TWR1SpeedStep = 1f; //Size of speed change per tap, default to 1m/s
+                                                    //public string TWR1SpeedStepString; //speed step as string for GUI text entry
+                                                    //public Texture2D TWR1SettingsIcon = new Texture2D(20, 22, TextureFormat.ARGB32, false); //toolbar icon texture
+                                                    // public Rect TWR1SettingsWin = new Rect(500, 500, 200, 145);  //settings window position
+                                                    //public bool TWR1SettingsShow = false; //show settings window?
+                                                    //public bool TWR1SelectingKey = false; //are we selecting a new key?
         public double TWR1LastVel; //vessel vertical velocity last physics frame
         public double TWR1DesiredAccelThrustLast = 0; //desired thrust last physics frame
         public double TWR1ThrustDiscrepancy; //difference in kN between thrusts last frame
@@ -85,7 +85,7 @@ namespace VerticalVelocity
         public float actualThrustLastFrame = 0; //difference between requested and actual thrust, hello jet engines
         public Vector3 TWR1ControlUp;
 
-        
+
         public void VertVelOn()
         {
             //Debug.Log("on");
@@ -93,28 +93,28 @@ namespace VerticalVelocity
             TWR1VelocitySetpoint = (float)this.vessel.verticalSpeed;
 
         }
-        
+
         public void VertVelOff()
         {
             //Debug.Log("off");
             TWR1Engaged = false;
-            
+
         }
-        
+
         public void VertVelZero()
         {
             //Debug.Log("zero");
             TWR1Engaged = true;
             TWR1VelocitySetpoint = 0;
         }
-        
+
         public void VertVelUp()
         {
             //Debug.Log("up");
             TWR1Engaged = true;
             TWR1VelocitySetpoint = TWR1VelocitySetpoint + TWR1.TWR1SpeedStep;
         }
-       
+
         public void VertVelDown()
         {
             //Debug.Log("dn");
@@ -160,6 +160,10 @@ namespace VerticalVelocity
 
         public void FixedUpdate() //forum says "all physics calculations should be on FixedUpdate, not Update". not sure a throttle adjustment qualifies as a physics calc, but put it here anyway
         {
+            //WarezCrawler 20180415
+            //Don't do calculations when not needed
+            if (!TWR1.TWR1Show)
+                return;
             //string //errLine = "1";
             try
             {
@@ -228,13 +232,14 @@ namespace VerticalVelocity
                                         // print("xform "+ TWR1EngineModule.thrustTransforms.Count + "||" + Vector3.Angle(TWR1EngineModule.thrustTransforms[0].forward,-TWR1Up));
                                         //print("TWR1 angle off" + Vector3.Angle(TWR1EngineModule.thrustTransforms[0].forward, TWR1Up));
 
-                                        double offsetMultiplier; 
-                                            try{
-                                                offsetMultiplier = Math.Max(0, Math.Cos(Mathf.Deg2Rad * Vector3.Angle(TWR1EngineModule.thrustTransforms[0].forward, -TWR1Up)));
-                                                //Debug.Log("TWR1off:" + offsetMultiplier + ":" + TWR1EngineModule.thrustTransforms[0].forward + ":" + -TWR1Up);
-                                            }
+                                        double offsetMultiplier;
+                                        try
+                                        {
+                                            offsetMultiplier = Math.Max(0, Math.Cos(Mathf.Deg2Rad * Vector3.Angle(TWR1EngineModule.thrustTransforms[0].forward, -TWR1Up)));
+                                            //Debug.Log("TWR1off:" + offsetMultiplier + ":" + TWR1EngineModule.thrustTransforms[0].forward + ":" + -TWR1Up);
+                                        }
                                         catch
-                                            {
+                                        {
                                             offsetMultiplier = 1;
                                         }
                                         //errLine = "16b";
@@ -269,7 +274,7 @@ namespace VerticalVelocity
                                     }
                                     else if (TWR1PartModule.moduleName == "ModuleEnginesFX") //find partmodule engine on th epart
                                     {
-                                         //errLine = "17";
+                                        //errLine = "17";
                                         TWR1EngineModuleFX = (ModuleEnginesFX)TWR1PartModule; //change from partmodules to moduleengines
                                         //errLine = "17a";
                                         double offsetMultiplier;
@@ -277,7 +282,7 @@ namespace VerticalVelocity
                                         {
                                             //errLine = "17b";
                                             //Debug.Log("thturs " + TWR1EngineModuleFX.thrustTransforms.Count);
-                                            
+
                                             offsetMultiplier = Math.Cos(Mathf.Deg2Rad * Vector3.Angle(TWR1EngineModuleFX.thrustTransforms[0].forward, -TWR1ControlUp)); //how far off vertical is this engine?
                                         }
                                         catch
@@ -285,7 +290,7 @@ namespace VerticalVelocity
                                             offsetMultiplier = 1;
                                         }
                                         //errLine = "17c";
-                                            if ((bool)TWR1PartModule.Fields.GetValue("throttleLocked") && TWR1EngineModuleFX.isOperational)//if throttlelocked is true, this is solid rocket booster. then check engine is operational. if the engine is flamedout, disabled via-right click or not yet activated via stage control, isOperational returns false
+                                        if ((bool)TWR1PartModule.Fields.GetValue("throttleLocked") && TWR1EngineModuleFX.isOperational)//if throttlelocked is true, this is solid rocket booster. then check engine is operational. if the engine is flamedout, disabled via-right click or not yet activated via stage control, isOperational returns false
                                         {
                                             //errLine = "17d";
                                             TWR1MaxThrust += (double)((TWR1EngineModuleFX.finalThrust) * offsetMultiplier); //add engine thrust to MaxThrust
@@ -305,7 +310,7 @@ namespace VerticalVelocity
                                             //TWR1MinThrustVertical += (double)((TWR1EngineModuleFX.minThrust * TWR1EngineModuleFX.thrustPercentage / 100F));
                                             //errLine = "17e4";
                                         }
-                                            //errLine = "17f";
+                                        //errLine = "17f";
                                         actualThrustLastFrame += (float)TWR1EngineModuleFX.finalThrust * (float)offsetMultiplier;
                                     }
 
@@ -335,7 +340,7 @@ namespace VerticalVelocity
                     //errLine = "24";
                     //altitude needed to orbit drop, is time to stop our current velocity of zero or lower (use zero if moving upwards) plus 20 seconds of falling due to gravity
                     //TWR1OrbitDropHeightNeeded = (Math.Abs(TWR1VelocityCurrent) * 40) + (TWR1HC80Thrust * Math.Pow(TWR1OrbitDropTimeNeeded, 2)) / 2; //how much altitude is needed to orbit drop?
-                    TWR1OrbitDropHeightNeeded = (Math.Pow(((Math.Abs(Math.Min(TWR1VelocityCurrent, 0))) + TWR1GravForce * 20), 2) / (2 * TWR1HC80Thrust)) + (TWR1GravForce * 200) + (Math.Abs(Math.Min(TWR1VelocityCurrent,0)) * 20) ; //twr1gravforce * 200 is shortcut for D = (accel * time^2) /2 
+                    TWR1OrbitDropHeightNeeded = (Math.Pow(((Math.Abs(Math.Min(TWR1VelocityCurrent, 0))) + TWR1GravForce * 20), 2) / (2 * TWR1HC80Thrust)) + (TWR1GravForce * 200) + (Math.Abs(Math.Min(TWR1VelocityCurrent, 0)) * 20); //twr1gravforce * 200 is shortcut for D = (accel * time^2) /2 
                     //errLine = "25";
                     //Debug.Log("heightneed " + TWR1OrbitDropHeightNeeded + "||" + TWR1VelocityCurrent + "||" + TWR1GravForce + "||" + TWR1HC80Thrust);
                     TWR1HCDistToTarget = Math.Abs(TWR1HCToGround - TWR1HCTarget);
@@ -346,7 +351,7 @@ namespace VerticalVelocity
 
                     TWR1OffsetVert = Vector3.Angle(TWR1Up, TWR1ControlUp);
                     //Debug.Log("tip " + TWR1OffsetVert);
-                    
+
                     TWR1VesselPitch = Math.Max((90 - TWR1OffsetVert), 0);
                     //errLine = "28";
                     TWR1OffsetVertRadian = Mathf.Deg2Rad * TWR1OffsetVert; //mathf.cos takes radians, not degrees, ask unity why
@@ -376,13 +381,10 @@ namespace VerticalVelocity
             //string //errLine = "1";
             try
             {
-                
-                 
-               
                 //TWR1ThrottleRead = FlightInputHandler.state.mainThrottle; //readback current throttle
-                
+
                 //errLine = "2";
-                
+
                 //print("mass " + TWR1MaxThrust + "||" + TWR1MinThrust + "||" + actualThrustLastFrame);
                 //errLine = "6";
                 if (TWR1MaxThrust < 1) //if MaxThrust is zero, a divide by zero error gets thrown later, so...
@@ -403,7 +405,7 @@ namespace VerticalVelocity
                 //TWR1HC5Thrust = (Math.Max((TWR1MaxThrust * .05), TWR1MinThrust) / TWR1Mass) - TWR1GravForce; //accel at 5% thrust, makes sure engine is on to allow for ship horizontal speed adjustment. this outside HC method for UI dispaly
                 //TWR1HC1Thrust = (Math.Max((TWR1MaxThrust * .01), TWR1MinThrust) / TWR1Mass) - TWR1GravForce;
                 //TWR1HC80Thrust = ((TWR1MaxThrust * .8f) / TWR1Mass) - TWR1GravForce; //use 80% acceleration to account for being off vertical, planet grav reduces accel in this case this outside HC method for UI disaply
-               // Debug.Log("aaaa " + TWR1VelocitySetpoint); 
+                // Debug.Log("aaaa " + TWR1VelocitySetpoint); 
                 if (TWR1HeightCtrl)
                 {
                     TWR1HeightControl(); //Height control now sets VelocitySetpoint (version 1.5)
@@ -420,14 +422,14 @@ namespace VerticalVelocity
                 }
 
                 //errLine = "10";
-                
+
                 TWR1VelocityDiff = TWR1VelocitySetpoint - TWR1VelocityCurrent; //find our velocity difference, order is important so that negative velocity is in the correct direction
-                TWR1DesiredAccel = TWR1VelocityDiff +TWR1GravForce; //find desired vertical accel, including planets grav. Because velocity is instant, this works to a close enough accuracy for our purposes without getting into PID control or something similar. Include fudge factor
+                TWR1DesiredAccel = TWR1VelocityDiff + TWR1GravForce; //find desired vertical accel, including planets grav. Because velocity is instant, this works to a close enough accuracy for our purposes without getting into PID control or something similar. Include fudge factor
 
 
                 TWR1DesiredAccelThrust = TWR1DesiredAccel * TWR1Mass; //desired thrust upwards, in kilonewtons
-                //print("hrust " + TWR1DesiredAccelThrust);
-                
+                                                                      //print("hrust " + TWR1DesiredAccelThrust);
+
 
                 //if (FlightGlobals.getStaticPressure() > 0.0001 && !TWR1HeightCtrl) //aerodynamic lift compensation calculation, replaiced with general compensation calculation below
                 //{
@@ -456,11 +458,11 @@ namespace VerticalVelocity
                 //    }
                 //}
                 //errLine = "11";
-                float accelLastFrameThrust = (((TWR1VelocityCurrent - (float)TWR1LastVel)/TimeWarp.fixedDeltaTime)+(float)TWR1GravForce) * (float)TWR1MassLast; //what was our observed accel last frame?
+                float accelLastFrameThrust = (((TWR1VelocityCurrent - (float)TWR1LastVel) / TimeWarp.fixedDeltaTime) + (float)TWR1GravForce) * (float)TWR1MassLast; //what was our observed accel last frame?
                 float accelDiff = actualThrustLastFrame - accelLastFrameThrust; //difference between actual accel and observed accel last frame, use as compensation this frame
-                //errLine = "11a";
-               // Debug.Log(" diffa " + accelDiff + "||" + accelLastFrameThrust + "||" + accelLastFrameThrust + "||" + TWR1DesiredAccelThrust);
-                while(accelDiffQueue.Count > 4) //except we need to averge this, otherwise tehre is too much bounce
+                                                                                //errLine = "11a";
+                                                                                // Debug.Log(" diffa " + accelDiff + "||" + accelLastFrameThrust + "||" + accelLastFrameThrust + "||" + TWR1DesiredAccelThrust);
+                while (accelDiffQueue.Count > 4) //except we need to averge this, otherwise tehre is too much bounce
                 {
                     accelDiffQueue.Dequeue();
                 }
@@ -475,21 +477,21 @@ namespace VerticalVelocity
                 }
                 float accelDiffAverage = 0;
                 //errLine = "11c";
-                foreach(float aD in accelDiffQueue)
+                foreach (float aD in accelDiffQueue)
                 {
                     accelDiffAverage = accelDiffAverage + aD;
                 }
                 //errLine = "11d";
                 accelDiffAverage = accelDiffAverage / accelDiffQueue.Count; //our averaged accel diff
-               
-               
+
+
                 TWR1DesiredAccelThrust = TWR1DesiredAccelThrust + accelDiffAverage; //compensate for lift/extra attachements with accel diff
                 //Debug.Log(" diff " + accelDiff + "||" + accelLastFrameThrust + "||" + accelDiffAverage + "|" + TWR1DesiredAccelThrust);
                 //TWR1ThrustUpAngle = TWR1DesiredAccelThrust / TWR1OffsetVertRatio; //compensate for vessel angle off vertical
                 //Debug.Log("t1 " + TWR1MaxThrust +"||" + TWR1MinThrust + "||" + TWR1DesiredAccelThrust);
                 TWR1ThrustUp = Math.Max(Math.Min((TWR1DesiredAccelThrust - TWR1MinThrust) / (TWR1MaxThrust - TWR1MinThrust), 1), 0); //find percent of current throttle, minimum 0 for no thrust, 1 for max thrust
-               // Debug.Log("t2 " + TWR1ThrustUp);
-                //errLine = "12";
+                                                                                                                                     // Debug.Log("t2 " + TWR1ThrustUp);
+                                                                                                                                     //errLine = "12";
                 if (TWR1ThrustUp > TWR1ThrottleRead) //throttle damper to limit vessel jolts, going from 0 to 100% thrust from one physics frame to the next can shake a ship apart.
                 {
                     TWR1ThrustUp = Math.Min(TWR1ThrottleRead + 0.03, TWR1ThrustUp);
@@ -499,9 +501,9 @@ namespace VerticalVelocity
                     TWR1ThrustUp = Math.Max(TWR1ThrottleRead - 0.03, TWR1ThrustUp);
                 }
                 TWR1ThrustUp = Math.Max(Math.Min(TWR1ThrustUp, 1), 0); //error catch throttle value, if an invalid value is passed to KSP it screws up.
-                //errLine = "13";
+                                                                       //errLine = "13";
 
-                
+
                 //if (TWR1HCToGround > TWR1HCTarget && TWR1HCDistToTarget > TWR1GravForce*100 && TWR1VelocityCurrent > ((Math.Sqrt(((TWR1HCDistToTarget + (TWR1VelocityCurrent * 20) - (TWR1GravForce * 10)) - (TWR1GravForce * 5)) * Math.Abs(TWR1HC80Thrust))) * -1.4) - (TWR1GravForce * 20))
                 if (TWR1HCToGround > TWR1HCTarget && TWR1HCDistToTarget > TWR1OrbitDropHeightNeeded)
                 {
@@ -520,35 +522,32 @@ namespace VerticalVelocity
 
                     if (TWR1HCOrbitDrop == false) //if falling from orbit, do not lock out throttle control
                     {
-                        
-                            if (this.vessel == FlightGlobals.ActiveVessel)
+
+                        if (this.vessel == FlightGlobals.ActiveVessel)
+                        {
+                            if (TWR1VesselPitch < 100)
                             {
-                                if (TWR1VesselPitch < 100)
-                                {
                                 FlightInputHandler.state.mainThrottle = (float)TWR1ThrustUp; //set throttle to desired thrust
-                                }
-                                else
-                                {
-                                    FlightInputHandler.state.mainThrottle =0f;
-                                }
-                                //Debug.Log("throttles' been set " + TWR1ThrustUp + "||" + FlightInputHandler.state.mainThrottle);
                             }
                             else
                             {
-
-                                //print("set throttle");
-                                if (TWR1VesselPitch < 100)
-                                {
-                                this.vessel.ctrlState.mainThrottle = (float)TWR1ThrustUp;
-                                }
-                                else
-                                {
-                                    this.vessel.ctrlState.mainThrottle = 0f;
-                                }
+                                FlightInputHandler.state.mainThrottle = 0f;
                             }
-                        
-                        
+                            //Debug.Log("throttles' been set " + TWR1ThrustUp + "||" + FlightInputHandler.state.mainThrottle);
+                        }
+                        else
+                        {
 
+                            //print("set throttle");
+                            if (TWR1VesselPitch < 100)
+                            {
+                                this.vessel.ctrlState.mainThrottle = (float)TWR1ThrustUp;
+                            }
+                            else
+                            {
+                                this.vessel.ctrlState.mainThrottle = 0f;
+                            }
+                        }
                     }
                 }
                 //print("Chcekc " + this.vessel.vesselName + "||" + TWR1Mass + "||" +TWR1ThrustUp);
@@ -558,7 +557,7 @@ namespace VerticalVelocity
                 TWR1LastVel = this.vessel.verticalSpeed; //save velocity from this frame for calculations next frame
                 TWR1MassLast = TWR1Mass;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 //Debug.Log("TWR1Math Fail " + //errLine + " " + e);
                 Debug.Log("TWR1Math Fail " + e);
@@ -566,7 +565,7 @@ namespace VerticalVelocity
         }
 
 
-        public Vector3 SetDirection(int ctrlDir,Vessel TWR1Vessel)
+        public Vector3 SetDirection(int ctrlDir, Vessel TWR1Vessel)
         {
             if (ctrlDir == 0)
             {
@@ -600,13 +599,10 @@ namespace VerticalVelocity
 
         public void TWR1HeightControl() //DesiredAccel must account for gravity in this method
         {
-            
             if (TWR1HCOrbitDrop) //are we orbit dropping?
             {
-
                 if (TWR1HCThrustWarningTime != 0) //are we in thrust warning?
                 {
-
                     if (this.vessel.missionTime - TWR1HCThrustWarningTime > 15) //check to see if it is time to exit thrust warning mode
                     {
                         TWR1HCOrbitDrop = false;
@@ -653,18 +649,18 @@ namespace VerticalVelocity
                         TWR1VelocitySetpoint = (float)Math.Sqrt(2 * (TWR1GravForce * .8) * (TWR1HCDistToTarget - (TWR1GravForce * 4)));
                         //Debug.Log("chekc " + TWR1VelocitySetpoint);
                     }
-                    
+
                     TWR1HCOrbitDrop = false; //error trap, below target height so we can't be orbit dropping
                 }
                 else//vessel above target height
                 { //vessel above target height, this is second so it is part of the else statement so if the math goes wonky the engine should burn high
                     //Debug.Log("5");
-                    if(TWR1HCDistToTarget <= TWR1GravForce * 8)
+                    if (TWR1HCDistToTarget <= TWR1GravForce * 8)
                     {
                         //Debug.Log("6");
                         //TWR1VelocitySetpoint = (float)(TWR1HCDistToTarget * (TWR1HC80Thrust / TWR1GravForce)) *-.1f;
                         //TWR1VelocitySetpoint = (float)Math.Min(TWR1GravForce, (TWR1HCDistToTarget) * .7);
-                        TWR1VelocitySetpoint = (float)(Math.Min(TWR1HCDistToTarget * .3,TWR1GravForce*.5) * -1);
+                        TWR1VelocitySetpoint = (float)(Math.Min(TWR1HCDistToTarget * .3, TWR1GravForce * .5) * -1);
                     }
                     //else if (TWR1HCDistToTarget < TWR1GravForce * 100)
                     //{
@@ -675,8 +671,8 @@ namespace VerticalVelocity
                         //TWR1VelocitySetpoint = (float)((Math.Sqrt((TWR1HCDistToTarget - (TWR1GravForce * 5)) * Math.Abs(TWR1HC80Thrust))) * -1.4);
                         TWR1VelocitySetpoint = (float)(Math.Sqrt(2 * (TWR1HC80Thrust * .8) * (TWR1HCDistToTarget - (TWR1GravForce * 6))) * -1);
                     }
-                    
-                    
+
+
                     //TWR1VelocitySetpoint = (float)((Math.Sqrt((TWR1HCDistToTarget * Math.Abs(TWR1HC80Thrust) * 2)))* -1f);
                     //Debug.Log("vel set " + TWR1VelocitySetpoint);
                     //////if (TWR1HCDistToTarget < TWR1GravForce * 4)
@@ -696,9 +692,8 @@ namespace VerticalVelocity
 
                 }
             }
+        }
 
-
-        } 
         [KSPAction("VertVel:U")]
         public void VertVelDirUp(KSPActionParam param)
         {
