@@ -115,12 +115,6 @@ namespace VerticalVelocity
         private bool TWR1VesselActive = true; //do we have a vessel to control?
         //TWR1Data rootTWR1Data;
 
-
-        //public void Awake() //Awake runs on mod load
-        //{
-
-        //}
-
         public void DummyVoid()
         {
 
@@ -131,19 +125,8 @@ namespace VerticalVelocity
             TWR1Show = !TWR1Show;
         }
 
-        //public void TWR1VesselChange(Vessel v)
-        //{
-        //    Debug.Log("VesselChanged!");
-        //}
-
-        //public void TWR1VesselUnDock(EventReport prt)
-        //{
-        //    Debug.Log("VesselUndock!");
-        //}
-
         public void Start() //Start runs on mod start, after all other mods loaded
         {
-            string errLine = "1";
             try
             {
 
@@ -188,34 +171,11 @@ namespace VerticalVelocity
                     TWR1Node.AddValue("TWR1Step", "1");
                     TWR1Node.Save(KSPUtil.ApplicationRootPath + "GameData/Diazo/TWR1/TWR1.settings");
                 }
-                errLine = "10";
                 TWR1KeyCodeString = TWR1Node.GetValue("TWR1Key"); //read keybind from .cfg, no functionality to set keybind from ingame exists yet
-                errLine = "11";
                 //TWR1KeyCode.code = (KeyCode)Enum.Parse(typeof(KeyCode), TWR1KeyCodeString); //convert from text string to KeyCode item
                 TWR1KeyCode = new KeyCodeExtended(TWR1KeyCodeString);
-                errLine = "12";
                 TWR1SpeedStep = (float)Convert.ToDecimal(TWR1Node.GetValue("TWR1Step")); //load speed step size from file
-                errLine = "13";
 
-                //if (TWR1Node.GetValue("TWR1KASDisable") == "true") //force SkyCrane mode off
-                //{
-                //    TWR1KASDetect = false;
-                //}
-                //else if (TWR1Node.GetValue("TWR1KASForce") == "true") //force SkyCrane mode on
-                //{
-                //    TWR1KASDetect = true;
-                //}
-                //else
-                //{
-                //    foreach (AssemblyLoader.LoadedAssembly Asm in AssemblyLoader.loadedAssemblies) //auto detect KAS for Skycrane
-                //    {
-                //        if (Asm.dllName == "KAS")
-                //        {
-                //            TWR1KASDetect = true;
-                //        }
-
-                //    }
-                //}
                 TWR1Skin = (GUISkin)MonoBehaviour.Instantiate(HighLogic.Skin);
                 TWR1WinStyle = new GUIStyle(TWR1Skin.window); //GUI skin style
                 TWR1LblStyle = new GUIStyle(TWR1Skin.label);
@@ -229,38 +189,6 @@ namespace VerticalVelocity
                 TWR1BtnStyle = new GUIStyle(TWR1Skin.button);
                 TWR1BtnStyle.fontStyle = FontStyle.Normal;
                 TWR1BtnStyle.alignment = TextAnchor.MiddleCenter;
-
-                //TWR1BtnStyle.normal.
-                // print(TWR1BtnStyle.normal.background);
-                //print(HighLogic.Skin.font);
-
-                //TWR1WinStyle = new GUIStyle();
-                //TWR1WinStyle.alignment = HighLogic.Skin.window.alignment;
-                //TWR1WinStyle.border = HighLogic.Skin.window.border;
-                //TWR1WinStyle.clipOffset = HighLogic.Skin.window.clipOffset;
-                //TWR1WinStyle.clipping = HighLogic.Skin.window.clipping;
-                //TWR1WinStyle.contentOffset = HighLogic.Skin.window.contentOffset;
-                //TWR1WinStyle.fixedHeight = HighLogic.Skin.window.fixedHeight;
-                //TWR1WinStyle.fixedWidth = HighLogic.Skin.window.fixedWidth;
-                //TWR1WinStyle.focused = HighLogic.Skin.window.focused;
-                //TWR1WinStyle.font = HighLogic.Skin.window.font;
-                //TWR1WinStyle.fontSize = HighLogic.Skin.window.fontSize;
-                //TWR1WinStyle.fontStyle = HighLogic.Skin.window.fontStyle;
-                //TWR1WinStyle.hover = HighLogic.Skin.window.hover;
-                //TWR1WinStyle.imagePosition = HighLogic.Skin.window.imagePosition;
-                //TWR1WinStyle.margin = HighLogic.Skin.window.margin;
-                //TWR1WinStyle.name = "TWR1Style";
-                //TWR1WinStyle.normal = HighLogic.Skin.window.normal;
-                //TWR1WinStyle.onActive = HighLogic.Skin.window.onActive;
-                //TWR1WinStyle.onFocused = HighLogic.Skin.window.onFocused;
-                //TWR1WinStyle.onHover = HighLogic.Skin.window.onHover;
-                //TWR1WinStyle.onNormal = HighLogic.Skin.window.onNormal;
-                //TWR1WinStyle.overflow = HighLogic.Skin.window.overflow;
-                //TWR1WinStyle.padding = HighLogic.Skin.window.padding;
-                //TWR1WinStyle.richText = HighLogic.Skin.window.richText;
-                //TWR1WinStyle.stretchHeight = HighLogic.Skin.window.stretchHeight;
-                //TWR1WinStyle.stretchWidth = HighLogic.Skin.window.stretchWidth;
-                //TWR1WinStyle.wordWrap = HighLogic.Skin.window.wordWrap;
 
                 try
                 {
@@ -324,7 +252,7 @@ namespace VerticalVelocity
             }
             catch(Exception e)
             {
-                Debug.Log("TWR1 Start Fail " + errLine + " " + e);
+                Debug.Log("TWR1 Start Fail " + e);
             }
 
         }
@@ -885,10 +813,8 @@ namespace VerticalVelocity
 
         public void Update()
         {
-            string errLine = "1";
             try
             {
-                errLine = "2";
                 try
                 {
                     //if(curVsl != null)
@@ -907,33 +833,26 @@ namespace VerticalVelocity
 
                     if (curVsl == null  && TWR1DataPresent(FlightGlobals.ActiveVessel) || curVsl.vessel.rootPart != FlightGlobals.ActiveVessel.rootPart || !FlightGlobals.ActiveVessel.parts.Contains(curVsl.part) || !curVsl.masterModule)
                     {
-                        errLine = "3";
                         List<TWR1Data> dataModules = new List<TWR1Data>();
                         foreach (Part p in FlightGlobals.ActiveVessel.parts)
                         {
-                            errLine = "4";
                             //foreach (TWR1Data td in p.Modules.OfType<TWR1Data>())
                             //{
                                 dataModules.AddRange(p.Modules.OfType<TWR1Data>());
                             //}
                         }
-                        errLine = "4a";
                         if (dataModules.Count == 0)
                         {
-                            errLine = "4b";
                             curVsl = null;
                         }
                         else if(dataModules.Where(pm => pm.masterModule == true).Count() > 0)
                         {
-                            errLine = "4c";
                             curVsl = dataModules.Where(pm => pm.masterModule == true).First();
                         }
                         else
                         {
-                            errLine = "4d";
                             curVsl = dataModules.First();
                         }
-                        errLine = "4e";
                         foreach(TWR1Data tdata in dataModules)
                         {
                             if(tdata == curVsl) //make sure our master is set
@@ -946,34 +865,6 @@ namespace VerticalVelocity
                                 tdata.TWR1Engaged = false;;
                             }
                         }
-                        errLine = "4f";  //if(!masterMdlFound && td.masterModule)
-                                //{
-
-                                //}
-                                //if (!mdlFound && !masterMdlFound)
-                                //{
-                                //    curVsl = td;
-                                //    mdlFound = true;
-                                //    //Debug.Log("td fnd");
-                                //}
-                                //else 
-                                //{
-                                //    td.TWR1Engaged = false;
-                                //    //Debug.Log("td not found");
-                                //}
-                            
-                            //if (p.Modules.Contains("TWR1Data"))
-                            //{
-                            //    errLine = "5";
-                                
-                            //}
-                            //errLine = "6";
-                            //goto par tFound;
-                        
-                        
-                        errLine = "7";
-                        //curVsl = null;
-                        errLine = "8";
                     }
                     //foreach(Part p in FlightGlobals.ActiveVessel.parts.Where(p2 => p2.Modules.Contains("TWR1Data")))
                     //{
@@ -985,12 +876,10 @@ namespace VerticalVelocity
                     //print("hit catch");
                     curVsl = null;
                 }
-                errLine = "9";
             //partFound:
                 //print(HighLogic.Skin.font);
                 if (timerElapsed)
                 {
-                    errLine = "10";
                     HideLine();
                     timerElapsed = false;
                     timerRunning = false;
@@ -1004,7 +893,6 @@ namespace VerticalVelocity
                     theLine.SetPosition(1, curVsl.TWR1ControlUp * 50);
                 }
 
-                errLine = "11";
 
                 if (ExtendedInput.GetKeyDown(TWR1KeyCode) == true) //Does the Z key get pressed, enabling this mod? Note this is only true on the first Update cycle the key is pressed.
                 {
@@ -1023,13 +911,11 @@ namespace VerticalVelocity
                     curVsl.TWR1HeightCtrl = false; //turn off height control if engaged
                     curVsl.TWR1HCOrbitDrop = false;
                 }
-                errLine = "12";
                 if (ExtendedInput.GetKeyUp(TWR1KeyCode) == true) //TWR1 Key just got released.
                 {
                     InputLockManager.RemoveControlLock("TWR1Throttle"); //remove throttle control lock
                     TWR1KeyDown = false; //TWR1 key is no longer held down
                 }
-                errLine = "13";
 
                 if (curVsl != null)
                 {
@@ -1055,7 +941,6 @@ namespace VerticalVelocity
                             curVsl.TWR1HeightCtrl = false;
                         }
                     }
-                    errLine = "14";
                     if (GameSettings.THROTTLE_DOWN.GetKeyDown() == true && curVsl.TWR1Engaged == true) //throtlle down key pressed, TWR1 engaged
                     {
                         if (curVsl.TWR1HCOrbitDrop) //orbit drop in progress
@@ -1077,7 +962,6 @@ namespace VerticalVelocity
 
                         }
                     }
-                    errLine = "15";
                     if (GameSettings.THROTTLE_CUTOFF.GetKeyDown() == true && curVsl.TWR1Engaged == true)
                     {
                         if (curVsl.TWR1HCOrbitDrop) //height control engaged and doing orbit drop
@@ -1122,7 +1006,7 @@ namespace VerticalVelocity
             }
             catch(Exception e)
             {
-                Debug.Log("TWR1 Update Fail! " + errLine + " " + e);
+                Debug.Log("TWR1 Update Fail! " + e);
             }
         }
     }
